@@ -1,24 +1,28 @@
-import logo from './logo.svg';
-import './App.css';
+import Main from "Components/Main";
+import Layout from "Layout";
+import { useCallback, useState } from "react";
 
 function App() {
+  const [timer, setTimer] = useState(60);
+  const [disabled, setDisabled] = useState(false);
+
+  const changeTimer = useCallback(() => {
+    setDisabled(true);
+    const interval = setInterval(() => {
+      setTimer((t) => {
+        if (t === 0) {
+          clearInterval(interval);
+          setDisabled(false);
+          return 60;
+        }
+        return t - 1;
+      });
+    }, 1000);
+  }, []);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Layout timer={timer}>
+      <Main timer={timer} changeTimer={changeTimer} disabled={disabled} />
+    </Layout>
   );
 }
 
